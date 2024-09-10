@@ -38,6 +38,7 @@ void main() async {
   }
 
   await GStorage.init();
+  HttpOverrides.global = CustomHttpOverrides();
 
   if (Platform.isAndroid || Platform.isIOS) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
@@ -172,5 +173,12 @@ class C001APKAPP extends StatelessWidget {
         },
       );
     });
+  }
+}
+
+class CustomHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)..userAgent = GStorage.userAgent;
   }
 }

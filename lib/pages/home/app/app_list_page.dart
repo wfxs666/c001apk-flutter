@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../pages/home/app/app_list_controller.dart';
 import '../../../pages/home/return_top_controller.dart';
+import '../../../utils/extensions.dart';
 import '../../../utils/storage_util.dart';
 
 class AppListPage extends StatefulWidget {
@@ -14,7 +15,10 @@ class AppListPage extends StatefulWidget {
 }
 
 class _AppListPageState extends State<AppListPage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   final _scrollController = ScrollController();
   final _appListController = Get.put(AppListController());
   final _returnTopController = Get.find<ReturnTopController>(tag: 'home');
@@ -65,8 +69,7 @@ class _AppListPageState extends State<AppListPage>
   }
 
   void _animateToTop() async {
-    await _scrollController.animateTo(0,
-        duration: const Duration(milliseconds: 500), curve: Curves.ease);
+    _scrollController.animToTop();
     _returnTopController.setIndex(999);
     _refreshKey.currentState?.show();
   }
@@ -82,6 +85,7 @@ class _AppListPageState extends State<AppListPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _appListController.obx(
       (data) => RefreshIndicator(
         key: _refreshKey,
